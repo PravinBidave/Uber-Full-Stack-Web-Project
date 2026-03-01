@@ -77,4 +77,77 @@ The request body must be sent as JSON and include the following fields:
 
 ---
 
+## `/users/login` Endpoint Documentation
+
+This section describes the `/users/login` endpoint used to authenticate existing users and retrieve a JWT token.
+
+### Overview
+
+- **Endpoint:** `/users/login`
+- **Method:** POST
+- **Purpose:** Authenticate a user with email and password and return an authentication token.
+
+---
+
+### Request Body
+
+The request body must be sent as JSON and include the following fields:
+
+| Field      | Type   | Required | Description                        |
+|------------|--------|----------|------------------------------------|
+| `email`    | string | yes      | Registered email address           |
+| `password` | string | yes      | User's password (minimum 6 chars)  |
+
+> **Note:** Validation is performed using `express-validator`.
+
+#### Example Request
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "s3cr3tpass"
+}
+```
+
+---
+
+### Response
+
+- **200 OK** (Success)
+  - Returns a JSON object containing:
+    - `token`: JWT authentication token for the user
+    - `user`: The authenticated user object (password omitted)
+
+- **400 Bad Request** (Validation errors or incorrect credentials)
+  - Returns JSON with an `errors` array describing the failure or a message indicating invalid credentials.
+
+- **500 Internal Server Error** (Server-side error)
+  - Indicates an unexpected error occurred during login.
+
+#### Example Success Response
+
+```json
+{
+  "token": "<jwt-token>",
+  "user": {
+    "_id": "60f7a8ba2f8fb814c89e2d12",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+---
+
+### Notes
+
+- Passwords are compared using bcrypt's `compare` function.
+- A JWT token is generated using the `JWT_SECRET` environment variable on successful authentication.
+- Ensure environment variables and database connections are configured before using this endpoint.
+
+---
+
 Created for Backend documentation.
