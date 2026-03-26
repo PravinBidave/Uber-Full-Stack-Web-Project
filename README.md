@@ -150,4 +150,67 @@ The request body must be sent as JSON and include the following fields:
 
 ---
 
+## `/users/profile` Endpoint Documentation
+
+### Overview
+
+- **Endpoint:** `/users/profile`
+- **Method:** GET
+- **Purpose:** Return the authenticated user's profile data.
+- **Auth:** Required (JWT token in cookie or Authorization header)
+
+---
+
+### Response
+
+- **200 OK** (Success)
+  - Returns the user profile object from `req.user`.
+
+- **401 Unauthorized** (No token or invalid/blacklisted token)
+  - Returns `{ message: 'Authentication required' }` or similar.
+
+- **500 Internal Server Error** (Server-side error)
+
+#### Example Success Response
+
+```json
+{
+  "_id": "60f7a8ba2f8fb814c89e2d12",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com"
+}
+```
+
+---
+
+## `/users/logout` Endpoint Documentation
+
+### Overview
+
+- **Endpoint:** `/users/logout`
+- **Method:** GET
+- **Purpose:** Invalidate the current JWT token and clear cookie.
+- **Auth:** Required (JWT token in cookie or Authorization header)
+
+---
+
+### Behavior
+
+- Clears `token` cookie from response.
+- Stores current token in the blacklist collection (`blackListToken`).
+
+### Response
+
+- **200 OK** (Success)
+  - `{ "message": "Logged out successfully" }`
+
+- **401 Unauthorized** (Missing or invalid token)
+
+- **500 Internal Server Error**
+
+---
+
 Created for Backend documentation.
